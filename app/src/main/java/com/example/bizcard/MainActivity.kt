@@ -29,7 +29,10 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
-
+@Composable
+fun BizCard() {
+    Text(text = "BizCard")
+}
 @Composable
 fun Greeting(name: String, modifier: Modifier = Modifier) {
     Text(
