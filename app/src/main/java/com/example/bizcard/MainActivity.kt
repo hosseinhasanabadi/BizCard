@@ -7,10 +7,12 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -41,14 +43,17 @@ import androidx.compose.ui.Alignment
 
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.bizcard.ui.theme.BizCardTheme
 import com.example.bizcard.ui.theme.LocalElevation
 
 import androidx.compose.material3.Card as Card
+
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -67,7 +72,7 @@ class MainActivity : ComponentActivity() {
 
     @Composable
     fun CreateBizCard() {
-        val buttonClickedState= remember{
+        val buttonClickedState = remember {
             mutableStateOf(false)
         }
         Surface(
@@ -90,10 +95,11 @@ class MainActivity : ComponentActivity() {
                 elevation = CardDefaults.cardElevation(defaultElevation = LocalElevation.current.extraSmall),
             ) {
                 Column(
-                    modifier = Modifier.fillMaxSize(),
+                    modifier = Modifier
+                        .fillMaxHeight()
+                        .fillMaxWidth(),
                     verticalArrangement = Arrangement.Top,
                     horizontalAlignment = Alignment.CenterHorizontally
-
 
 
                 ) {
@@ -102,7 +108,7 @@ class MainActivity : ComponentActivity() {
                     CreateInfo()
                     Button(
                         onClick = {
-                                  buttonClickedState.value=!buttonClickedState.value
+                            buttonClickedState.value = !buttonClickedState.value
 
                         }, modifier = Modifier
                             .padding(start = 20.dp)
@@ -114,11 +120,10 @@ class MainActivity : ComponentActivity() {
                         )
 
                     }
-                    if (buttonClickedState.value){
+                    if (buttonClickedState.value) {
                         Content()
-                    }else{
-                        Box (){
-
+                    } else {
+                        Box {
                         }
                     }
                 }
@@ -129,32 +134,67 @@ class MainActivity : ComponentActivity() {
 
         }
     }
-    @Preview
-@Composable
-fun Content(){
-    Box (modifier = Modifier
-        .fillMaxSize()
-        .padding(5.dp)){
-        Surface(modifier = Modifier
-            .padding(3.dp)
-            .fillMaxSize()
-        , shape = RoundedCornerShape(corner = CornerSize(6.dp)),
-            border = BorderStroke(width = 2.dp,color = Color.LightGray)) {
-            Portfolio(data = listOf("Project 1","Project 2","Project 3","Project 4"))
+
+    @Composable
+    fun Content() {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(5.dp)
+        ) {
+            Surface(
+                modifier = Modifier
+                    .padding(3.dp)
+                    .fillMaxSize(), shape = RoundedCornerShape(corner = CornerSize(6.dp)),
+                border = BorderStroke(width = 2.dp, color = Color.LightGray)
+            ) {
+                Portfolio(data = listOf("Project 1", "Project 2", "Project 3", "Project 4"))
 
 
+            }
 
         }
 
     }
 
-}
-
     private @Composable
     fun Portfolio(data: List<String>) {
         LazyColumn {
-            items(data){item->
-                Text(text = item)
+            items(data) { item ->
+                Card(
+                    modifier = Modifier
+                        .padding(13.dp)
+                        .fillMaxHeight()
+                        .fillMaxWidth(),
+                    shape = RectangleShape
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(8.dp)
+                            .background(MaterialTheme.colorScheme.surface)
+                            .padding(7.dp)
+                    ) {
+                        CreateImageProfile(modifier = Modifier.size(100.dp))
+                        Column(
+                            modifier = Modifier
+                                .padding(7.dp)
+                                .align(alignment = Alignment.CenterVertically)
+                        ) {
+                            Text(text = item, fontWeight = FontWeight.Bold)
+                            Text(
+                                text = "good",
+                                style = MaterialTheme.typography.bodyMedium
+                            )
+
+
+                        }
+
+                    }
+
+
+                }
+
 
             }
         }
@@ -185,20 +225,21 @@ fun Content(){
 
 
     @Composable
-    private fun CreateImageProfile(modifier: Modifier=Modifier) {
+    private fun CreateImageProfile(modifier: Modifier = Modifier) {
         Surface(
             modifier = Modifier
                 .size(150.dp)
-                .padding(5.dp), shape = CircleShape,
+                .padding(5.dp),
+            shape = CircleShape,
             border = BorderStroke(0.5.dp, Color.LightGray),
-            tonalElevation = 50.dp,
+            tonalElevation = 4.dp,
             color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
 
         ) {
             Image(
                 painter = painterResource(id = R.drawable.profile),
                 contentDescription = "profile image",
-                modifier = Modifier.size(135.dp),
+                modifier = modifier.size(135.dp),
                 contentScale = ContentScale.Crop
             )
 
@@ -206,11 +247,19 @@ fun Content(){
         }
     }
 
-  //  @Preview(showBackground = true)
+    @Preview(showBackground = true)
     @Composable
     fun GreetingPreview() {
         BizCardTheme {
             CreateBizCard()
+            Portfolio(
+                data = listOf(
+                    "Project 1",
+                    "Project 2",
+                    "Project 3",
+                    "Project 4"
+                )
+            )
 
         }
     }
