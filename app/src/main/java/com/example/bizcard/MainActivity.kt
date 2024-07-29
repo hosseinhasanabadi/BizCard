@@ -1,13 +1,15 @@
 package com.example.bizcard
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -16,9 +18,12 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
 
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -27,7 +32,10 @@ import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
 
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 
 
@@ -39,9 +47,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.bizcard.ui.theme.BizCardTheme
 import com.example.bizcard.ui.theme.LocalElevation
-import com.example.bizcard.ui.theme.elevation
-import androidx.compose.material3.Card as Card
 
+import androidx.compose.material3.Card as Card
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,6 +67,9 @@ class MainActivity : ComponentActivity() {
 
     @Composable
     fun CreateBizCard() {
+        val buttonClickedState= remember{
+            mutableStateOf(false)
+        }
         Surface(
             modifier = Modifier
                 // .fillMaxSize()
@@ -80,7 +90,7 @@ class MainActivity : ComponentActivity() {
                 elevation = CardDefaults.cardElevation(defaultElevation = LocalElevation.current.extraSmall),
             ) {
                 Column(
-                    modifier = Modifier.fillMaxSize(300f),
+                    modifier = Modifier.fillMaxSize(),
                     verticalArrangement = Arrangement.Top,
                     horizontalAlignment = Alignment.CenterHorizontally
 
@@ -89,6 +99,28 @@ class MainActivity : ComponentActivity() {
                 ) {
                     CreateImageProfile()
                     Divider()
+                    CreateInfo()
+                    Button(
+                        onClick = {
+                                  buttonClickedState.value=!buttonClickedState.value
+
+                        }, modifier = Modifier
+                            .padding(start = 20.dp)
+                    ) {
+
+                        Text(
+                            text = "Portfolio",
+                            style = MaterialTheme.typography.labelLarge
+                        )
+
+                    }
+                    if (buttonClickedState.value){
+                        Content()
+                    }else{
+                        Box (){
+
+                        }
+                    }
                 }
 
 
@@ -97,6 +129,60 @@ class MainActivity : ComponentActivity() {
 
         }
     }
+    @Preview
+@Composable
+fun Content(){
+    Box (modifier = Modifier
+        .fillMaxSize()
+        .padding(5.dp)){
+        Surface(modifier = Modifier
+            .padding(3.dp)
+            .fillMaxSize()
+        , shape = RoundedCornerShape(corner = CornerSize(6.dp)),
+            border = BorderStroke(width = 2.dp,color = Color.LightGray)) {
+            Portfolio(data = listOf("Project 1","Project 2","Project 3","Project 4"))
+
+
+
+        }
+
+    }
+
+}
+
+    private @Composable
+    fun Portfolio(data: List<String>) {
+        LazyColumn {
+            items(data){item->
+                Text(text = item)
+
+            }
+        }
+
+
+    }
+
+    @Composable
+    private fun CreateInfo() {
+        Column(modifier = Modifier.padding(5.dp)) {
+            Text(
+                text = "Miles P.",
+                style = MaterialTheme.typography.headlineMedium,
+                color = MaterialTheme.colorScheme.primary
+            )
+            Text(
+                text = "Android Compose Programmer",
+                modifier = Modifier.padding(3.dp)
+            )
+            Text(
+                text = "@ThemilesCompose",
+                modifier = Modifier.padding(3.dp),
+            )
+
+
+        }
+    }
+
 
     @Composable
     private fun CreateImageProfile(modifier: Modifier=Modifier) {
@@ -120,7 +206,7 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    @Preview(showBackground = true)
+  //  @Preview(showBackground = true)
     @Composable
     fun GreetingPreview() {
         BizCardTheme {
